@@ -5,8 +5,8 @@ import sys
 import time
 
 base = sys.argv[1]
-HEADER = "time_ms,temp_c,temp_k"
-ROW = re.compile(r"^\d+,[^,]*,[^,]*$")
+HEADER = "time_ms,temp_c,temp_k,adc"
+ROW = re.compile(r"^\d+,[^,]*,[^,]*,\d+$")
 GRACE = 3.0  # seconds to wait for the post-reset header
 
 log = open(base + ".log", "w")
