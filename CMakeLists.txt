@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(PH3039 NONE)
 
 set(FQBN "arduino:avr:uno" CACHE STRING "Board FQBN")
-set(PORT "/dev/cu.usbmodem101" CACHE STRING "Serial port")
+set(PORT "/dev/ttyUSB0" CACHE STRING "Serial port")
 set(BAUD 9600 CACHE STRING "Monitor baud rate")
 
 find_program(ARDUINO_CLI arduino-cli REQUIRED)

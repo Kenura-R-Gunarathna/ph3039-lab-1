@@ -1,4 +1,5 @@
 BUILD := build
+PORT ?= /dev/ttyUSB0
 
 .PHONY: configure build upload monitor run log plot clean
 configure:
@@ -18,7 +19,7 @@ run:
 
 # Log serial: data/log_<stamp>.log (everything) + .csv (data rows only)
 log: configure
-	./scripts/log.sh /dev/cu.usbmodem101 9600
+	./scripts/log.sh $(PORT) 9600
 
 # Live plot of the newest CSV -> data/plot.png (run alongside `make log`)
 plot:
