@@ -24,4 +24,4 @@ trap 'exit 130' INT TERM HUP
 
 echo "Logging to $base.log and $base.csv (Ctrl+C to stop)"
 arduino-cli monitor --quiet --port "$1" --config baudrate="$2" \
-| python3 "$(dirname "$0")/split.py" "$base"
+| "${PYTHON:-$(command -v python3 || command -v python || command -v py)}" "$(dirname "$0")/split.py" "$base"
