@@ -1,0 +1,17 @@
+[workspace]
+authors = ["Kenura Gunarathna <kenura.gunarathna@thenex.global>"]
+channels = ["conda-forge"]
+name = "report"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+numpy = ">=2.5.3,<3"
+matplotlib = ">=3.11.2,<4"
+jupyterlab = ">=4.6.4,<5"
+pandas = ">=3.0.6,<4"
+statsmodels = ">=0.15.0,<0.16"
+scikit-learn = ">=1.9.1,<2"
+seaborn = ">=0.13.2,<0.14"
