@@ -1,80 +1,79 @@
-```bash
 #!/usr/bin/env bash
-set -euo pipefail
 
-# Detect common Arduino data directories on Linux and macOS.
-ARDUINO_ROOTS=(
-    "$HOME/.arduino15"
-    "$HOME/Library/Arduino15"
-)
+set -e
 
-# Find an installed Arduino AVR core.
-AVR_CORE=""
-for root in "${ARDUINO_ROOTS[@]}"; do
-    for path in "$root"/packages/arduino/hardware/avr/*/cores/arduino; do
-        if [[ -d "$path" ]]; then
-            AVR_CORE="$path"
-            break 2
-        fi
-    done
-done
+echo "Setting up clangd..."
 
-if [[ -z "$AVR_CORE" ]]; then
+# --------------------------------------------------
+# Find Arduino data directory
+# --------------------------------------------------
+
+if [ -d "$HOME/.arduino15" ]; then
+    ARDUINO15="$HOME/.arduino15"
+elif [ -d "$HOME/Library/Arduino15" ]; then
+    ARDUINO15="$HOME/Library/Arduino15"
+else
+    echo "Error: Arduino15 directory not found."
+    exit 1
+fi
+
+echo "Arduino15: $ARDUINO15"
+
+# --------------------------------------------------
+# Find Arduino AVR core
+# --------------------------------------------------
+
+AVR_CORE=$(find "$ARDUINO15/packages/arduino/hardware/avr" \
+    -type d \
+    -path "*/cores/arduino" \
+    -print -quit)
+
+if [ -z "$AVR_CORE" ]; then
     echo "Error: Arduino AVR core not found."
-    echo "Install Arduino AVR Boards using Arduino IDE or arduino-cli."
     exit 1
 fi
 
-AVR_VARIANT="$(dirname "$AVR_CORE")/variants/standard"
+AVR_ROOT=$(dirname "$AVR_CORE")
 
-if [[ ! -d "$AVR_VARIANT" ]]; then
-    echo "Error: Arduino Uno variant directory not found."
-    exit 1
-fi
+echo "AVR core: $AVR_CORE"
 
-# Find AVR compiler headers. Different installations can use
-# different directory structures.
-AVR_INCLUDE=""
-for root in "${ARDUINO_ROOTS[@]}"; do
-    for path in \
-        "$root"/packages/arduino/tools/avr-gcc/*/avr/include \
-        "$root"/packages/arduino/tools/avr-gcc/*/*/avr/include
-    do
-        if [[ -d "$path" ]]; then
-            AVR_INCLUDE="$path"
-            break 2
-        fi
-    done
-done
+# --------------------------------------------------
+# Find AVR GCC headers
+# --------------------------------------------------
 
-if [[ -z "$AVR_INCLUDE" ]]; then
+AVR_INCLUDE=$(find "$ARDUINO15/packages/arduino/tools/avr-gcc" \
+    -type d \
+    -path "*/avr/include" \
+    -print -quit)
+
+if [ -z "$AVR_INCLUDE" ]; then
     echo "Error: AVR GCC headers not found."
-    echo "Check that the Arduino AVR toolchain is installed."
     exit 1
 fi
 
-# Find the Arduino sketchbook libraries on Linux or macOS.
-LIBRARY_ROOTS=(
-    "$HOME/Arduino/libraries"
-    "$HOME/Documents/Arduino/libraries"
-)
+echo "AVR headers: $AVR_INCLUDE"
 
-find_library() {
-    local library="$1"
+# --------------------------------------------------
+# Arduino libraries
+# --------------------------------------------------
 
-    for root in "${LIBRARY_ROOTS[@]}"; do
-        if [[ -d "$root/$library" ]]; then
-            printf '%s\n' "$root/$library"
-            return 0
-        fi
-    done
+ONEWIRE="$HOME/Arduino/libraries/OneWire"
+DALLAS="$HOME/Arduino/libraries/DallasTemperature"
 
-    return 1
-}
+# macOS can also use ~/Documents/Arduino
+if [ ! -d "$ONEWIRE" ]; then
+    ONEWIRE="$HOME/Documents/Arduino/libraries/OneWire"
+fi
 
-# Generate .clangd.
-{
-    cat <<'EOF'
+if [ ! -d "$DALLAS" ]; then
+    DALLAS="$HOME/Documents/Arduino/libraries/DallasTemperature"
+fi
+
+# --------------------------------------------------
+# Generate .clangd
+# --------------------------------------------------
+
+cat > .clangd <<EOF
 CompileFlags:
   Compiler: clang++
   Add:
@@ -86,21 +85,24 @@ CompileFlags:
     - -DARDUINO_AVR_UNO
     - -DARDUINO_ARCH_AVR
     - -DF_CPU=16000000L
+
+    - -I$AVR_CORE
+    - -I$AVR_ROOT/variants/standard
+    - -I$AVR_INCLUDE
 EOF
 
-    printf '    - -I%s\n' "$AVR_CORE"
-    printf '    - -I%s\n' "$AVR_VARIANT"
-    printf '    - -I%s\n' "$AVR_INCLUDE"
+if [ -d "$ONEWIRE" ]; then
+    echo "    - -I$ONEWIRE" >> .clangd
+    echo "OneWire: $ONEWIRE"
+fi
 
-    for library in OneWire DallasTemperature; do
-        if library_path="$(find_library "$library")"; then
-            printf '    - -I%s\n' "$library_path"
-        else
-            echo "Warning: $library library not found; skipping." >&2
-        fi
-    done
+if [ -d "$DALLAS" ]; then
+    echo "    - -I$DALLAS" >> .clangd
+    echo "DallasTemperature: $DALLAS"
+fi
 
-    cat <<'EOF'
+cat >> .clangd <<'EOF'
+
   Remove:
     - -march=*
     - -mcpu=*
@@ -109,10 +111,9 @@ Diagnostics:
   Suppress:
     - pp_file_not_found_with_hint
 EOF
-} > .clangd
 
-echo "Generated .clangd successfully."
-echo "Arduino core: $AVR_CORE"
-echo "AVR headers:  $AVR_INCLUDE"
-echo "Configuration: $(pwd)/.clangd"
-```
+echo
+echo "clangd configuration created:"
+echo "  $(pwd)/.clangd"
+echo
+echo "Done."
