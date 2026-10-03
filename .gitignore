@@ -1,3 +1,5 @@
 build/
 .DS_Store
 # data/ is tracked on purpose: logs are kept in every branch
+.vscode/
+.clangd
