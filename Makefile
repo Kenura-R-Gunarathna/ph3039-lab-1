@@ -7,7 +7,7 @@ PY := $(shell command -v python3 || command -v python || command -v py)
 PORT ?= $(shell $(PY) scripts/port.py)
 export PORT
 
-.PHONY: configure build upload monitor run log plot clean
+.PHONY: configure build upload monitor run log plot report clean
 configure:
 	cmake -S . -B $(BUILD)
 build: configure
@@ -33,3 +33,7 @@ log: configure
 # Live plot of the newest CSV -> data/plot.png (run alongside `make log`)
 plot:
 	./scripts/plot.sh $(CSV)
+
+# Build the report PDF (needs typst)
+report:
+	typst compile report/s17239_ph3039_report.typ report/s17239_ph3039_report.pdf
