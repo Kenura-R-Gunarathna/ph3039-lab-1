@@ -42,18 +42,18 @@ We fitted polynomials of degree 1 to 3 to temperature against ADC. Empty rows an
   caption: [Fit errors (°C) for heating (H, $N=1078$) and cooling (C, $N=4243$).],
 )
 
-The cubic fit is the best. The straight line leaves an S-shaped error of up to about 4 °C. The cubic cuts the RMSE to 0.35 °C for heating and 0.55 °C for cooling. All cubic terms are significant ($|t| > 18$, $p < 0.001$). The large condition number ($tilde 10^9$) comes from using raw ADC powers and is harmless. The cooling errors are correlated in time (Durbin–Watson 0.02), so the standard errors are slightly too small.
+The cubic fit is the best. The straight line leaves an S-shaped error of up to about 4 °C. The cubic cuts the RMSE to 0.35 °C for heating and 0.55 °C for cooling. All cubic terms are significant ($|t| > 17$, $p < 0.001$). The large condition number ($tilde 10^9$) comes from using raw ADC powers and is harmless. The cooling errors are correlated in time (Durbin–Watson 0.02), so the standard errors are slightly too small.
 
 #figure(
   table(
     columns: (auto, auto, auto, auto, auto),
     align: center + horizon,
     [Coefficient], [Heating], [Cooling], [Global], [Global std. err.],
-    [$c_0$ (intercept)], [−18.792], [−8.433], [−17.559], [0.076],
-    [$c_1$ (ADC)], [0.2277], [0.1562], [0.2134], [0.001],
-    [$c_2$ (ADC²)], [−3×10⁻⁴], [−1×10⁻⁴], [−2.495×10⁻⁴], [1.34×10⁻⁶],
-    [$c_3$ (ADC³)], [2.107×10⁻⁷], [1.186×10⁻⁷], [1.869×10⁻⁷], [9.36×10⁻¹⁰],
-    [$N$ / AIC], [1078 / 773.8], [4250 / 7028], [5321 / 8557], [—],
+    [$c_0$ (intercept)], [−18.792], [−7.364], [−17.559], [0.076],
+    [$c_1$ (ADC)], [0.2277], [0.1495], [0.2134], [0.001],
+    [$c_2$ (ADC²)], [−2.848×10⁻⁴], [−1.240×10⁻⁴], [−2.495×10⁻⁴], [1.34×10⁻⁶],
+    [$c_3$ (ADC³)], [2.107×10⁻⁷], [1.107×10⁻⁷], [1.869×10⁻⁷], [9.36×10⁻¹⁰],
+    [$N$ / AIC], [1078 / 773.8], [4243 / 6914], [5321 / 8557], [—],
   ),
   caption: [Cubic fit coefficients. All terms have $p < 0.001$.],
   kind: table,
@@ -64,11 +64,11 @@ The cubic fit is the best. The straight line leaves an S-shaped error of up to a
     columns: (1fr, auto, auto, auto),
     align: (left, center, center, center),
     [Statistic], [Heating], [Cooling], [Global],
-    [$F$-statistic], [4.06×10⁶], [1.35×10⁶], [3.21×10⁶],
+    [$F$-statistic], [4.06×10⁶], [1.38×10⁶], [3.21×10⁶],
     [Durbin–Watson], [0.156], [0.022], [0.031],
-    [Jarque–Bera], [7.80], [321.1], [468.2],
-    [Skew / kurtosis], [0.21 / 2.98], [−0.62 / 2.48], [−0.72 / 2.80],
-    [Condition number], [2.6×10⁹], [1.3×10¹⁰], [2.4×10⁹],
+    [Jarque–Bera], [7.80], [325.3], [468.2],
+    [Skew / kurtosis], [0.21 / 2.98], [−0.53 / 2.16], [−0.72 / 2.80],
+    [Condition number], [2.6×10⁹], [1.35×10¹⁰], [2.4×10⁹],
   ),
   caption: [Residual checks for the cubic fits.], kind: table,
 )
@@ -158,6 +158,6 @@ The reference error dominates; the fit and resolution terms add less than 0.1 °
 
 Both models calibrate the thermistor to within the ±1 °C uncertainty of the DS18B20. The global cubic (4 parameters) has RMSE 0.54 °C and ±1.06 °C (95 % PI); the β-model (2 parameters, $beta = 3965$ K, $R^2 = 0.9993$) has RMSE 0.60 °C. Error theory gives the same ±0.5 °C for both because the reference dominates. The cubic is slightly better inside 0–98 °C. The β-model is almost as good with half the parameters, works well outside the range, and gives a real physical constant.
 
-*Limits.* The DS18B20 is only accurate to ±0.5 °C, so smaller errors cannot be proved. Lag between the two sensors adds error during fast changes. Only three runs were usable (0–98 °C), so do not use the cubic outside this range.
+*Limits.* The DS18B20 is only accurate to ±0.5 °C, so smaller errors cannot be proved. Lag between the two sensors adds error during rapid changes. Only three runs were usable (0–98 °C), so do not use the cubic outside this range.
 
 #alert(type: "success", title: "Recommendation")[Use the β-model as the main calibration, and the cubic only when you need the lowest error inside 0–98 °C. The heating/cooling gap (about 0.6 °C) is below the reference uncertainty, so one calibration works for both directions.]
