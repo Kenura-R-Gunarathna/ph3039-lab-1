@@ -1,0 +1,12 @@
+CompileFlags:
+  CompilationDatabase: build
+  # GCC-only flags clang doesn't understand
+  Remove: [--param=*, -fno-threadsafe-statics]
+  # arm-none-eabi-gcc's libstdc++/newlib headers (so it works without --query-driver)
+  Add:
+    - --target=arm-none-eabi
+    - -isystem/Users/kenura/Library/Arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include/c++/9.2.1
+    - -isystem/Users/kenura/Library/Arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include/c++/9.2.1/arm-none-eabi/thumb/v7e-m+fp/hard
+    - -isystem/Users/kenura/Library/Arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include/c++/9.2.1/backward
+    - -isystem/Users/kenura/Library/Arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/9-2019q4/lib/gcc/arm-none-eabi/9.2.1/include-fixed
+    - -isystem/Users/kenura/Library/Arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include

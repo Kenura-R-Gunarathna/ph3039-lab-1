@@ -1,0 +1,9 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/report/.pixi/envs/default/bin/python",
+  "python.terminal.activateEnvironment": false,
+  "jupyter.notebookFileRoot": "${fileDirname}",
+  "clangd.arguments": [
+    "--query-driver=${env:HOME}/Library/Arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/*/bin/arm-none-eabi-*"
+  ],
+  "C_Cpp.intelliSenseEngine": "disabled"
+}

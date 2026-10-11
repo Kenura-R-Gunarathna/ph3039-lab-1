@@ -1,0 +1,13 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "XIAO nRF52840 Sense",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+      "compilerPath": "${env:HOME}/Library/Arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/9-2019q4/bin/arm-none-eabi-g++",
+      "cStandard": "gnu11",
+      "cppStandard": "gnu++11",
+      "intelliSenseMode": "gcc-arm"
+    }
+  ]
+}
