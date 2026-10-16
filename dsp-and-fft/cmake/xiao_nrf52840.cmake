@@ -34,7 +34,8 @@ file(GLOB_RECURSE TUSB_PORT_ALL "${TUSB}/portable/*.c")
 set(LIB_SRC
   "${BSP}/libraries/Wire/Wire_nRF52.cpp"
   "${BSP}/libraries/SPI/SPI.cpp" "${BSP}/libraries/SPI/SPI_nrf52832.cpp"
-  "${LSM6DS3_DIR}/LSM6DS3.cpp")
+  "${LSM6DS3_DIR}/LSM6DS3.cpp"
+  "${BSP}/libraries/PDM/src/PDM.cpp" "${BSP}/libraries/PDM/src/utility/PDMDoubleBuffer.cpp")
 
 # Core goes in an archive (like Arduino's core.a); TinyUSB + libraries are linked as plain
 # objects so their hooks (USB init, ISRs) are never dropped by the archive linker.
@@ -59,7 +60,7 @@ target_include_directories(${t} SYSTEM PUBLIC
   "${CORE}/freertos/portable/GCC/nrf52" "${CORE}/freertos/portable/CMSIS/nrf52"
   "${CORE}/sysview/SEGGER" "${CORE}/sysview/Config"
   "${TUSB}/arduino" "${CORE}" "${VARIANT}"
-  "${LSM6DS3_DIR}" "${BSP}/libraries/Wire" "${BSP}/libraries/SPI" "${TUSB}")
+  "${LSM6DS3_DIR}" "${BSP}/libraries/PDM/src" "${BSP}/libraries/Wire" "${BSP}/libraries/SPI" "${TUSB}")
 
 target_compile_options(${t} PUBLIC ${CPU_FLAGS} -Ofast -g -ffunction-sections -fdata-sections -nostdlib -w
   $<$<COMPILE_LANGUAGE:CXX>:-std=gnu++11 -fno-rtti -fno-exceptions -fno-threadsafe-statics --param=max-inline-insns-single=500>)

@@ -1,1 +1,6 @@
 build/
+.venv/
+dataset/
+.pixi/
+dataset_raw/
+logs/

@@ -1,0 +1,28 @@
+[workspace]
+name = "dsp-and-fft"
+channels = ["conda-forge"]
+platforms = ["osx-arm64"]
+
+[dependencies]
+python = "3.12.*"
+numpy = "*"
+scipy = "*"
+matplotlib = "*"
+pandas = "*"
+jupyterlab = "*"
+ipykernel = "*"
+ipywidgets = "*"
+pyserial = "*"
+textual = ">=8.2.8,<9"
+scikit-learn = ">=1.9.1,<2"
+pytorch = ">=2.14.1,<3"
+
+[tasks]
+lab = "jupyter lab notebooks"
+record = "python tools/dataset_cli.py"
+train-export = "python tools/train_export.py"
+live = "python tools/live_session.py"
+train-cnn = "python tools/train_cnn.py"
+cnn-test = "python tools/cnn_session.py"
+raw = "python tools/raw_session.py"
+tui = "python tools/dataset_tui.py"
